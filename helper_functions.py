@@ -1,3 +1,5 @@
+import math 
+
 def jukes_cantor(reference_sequence: str, distant_sequence: str) -> float:
     """The Jukes-Cantor correction for estimating genetic distances
     calculated with Hamming distance.
@@ -19,8 +21,21 @@ def jukes_cantor(reference_sequence: str, distant_sequence: str) -> float:
         For example 1.163.
 
     """
-    raise NotImplementedError()
+    distance = 0
+    valid_pos = 0
 
+    for i, j in zip(reference_sequence, distant_sequence):
+        if i == '-' or j == '-':
+            continue
+
+        if i != j:
+            distance += 1
+
+        valid_pos += 1
+
+    proportion = distance / valid_pos
+
+    return -0.75 * math.log(1 - (4/3) * proportion) * valid_pos
 
 def kimura_two_parameter(reference_sequence: str, distant_sequence: str) -> float:
     """The Kimura Two Parameter correction for estimating genetic distances
