@@ -58,4 +58,29 @@ def kimura_two_parameter(reference_sequence: str, distant_sequence: str) -> floa
         For example 1.196.
 
     """
-    raise NotImplementedError()
+    purines = {'A', 'G'}
+    pyrimidines = {'T', 'C'}
+
+    num_transitions = 0
+    num_transversions = 0
+    num_valid_sites = 0
+
+    for base1, base2 in zip(reference_sequence, distant_sequence):
+        if base1 == '-' or base2 == '-' or base1 not in 'ACTG' or base2 not in 'ACTG':
+            continue
+        num_valid_sites += 1
+        
+        if base1 != base2:
+            if (base1 in purines and base2 in purines) or (base1 in pyrimidines and base2 in pyrimidines):
+                num_transitions += 1
+            else:
+                num_transversions += 1
+
+    if num_valid_sites == 0:
+        return 0.0
+
+    prop_transition = num_transitions / num_valid_sites
+    prop_transversion = num_transversions / num_valid_sites
+    distance = -0.5 * math.log(1 - 2 * prop_transition - prop_transversion) - 0.25 * math.log(1 - 2 * prop_transversion) 
+
+    return distance * num_valid_sites
